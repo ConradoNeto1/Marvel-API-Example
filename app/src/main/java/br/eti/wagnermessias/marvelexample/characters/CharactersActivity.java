@@ -18,7 +18,7 @@ public class CharactersActivity extends AppCompatActivity {
     @BindView(R.id.rv_characters)
     RecyclerView mRecyclerView;
     private List<Character> characters =  new ArrayList<>();
-    private LinearLayoutManager layoutManager;
+    private AutoFitGridLayoutManager layoutManager;
     private CharactersAdapter adapter;
 
     @Override
@@ -39,7 +39,7 @@ public class CharactersActivity extends AppCompatActivity {
         //btn_tray_again.setVisibility(View.GONE);
         this.characters = characters;
         mRecyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new AutoFitGridLayoutManager(this,200);
         mRecyclerView.setLayoutManager(layoutManager);
         adapter = new CharactersAdapter(this, this.characters);
 //        adapter.setClickListener(this);
