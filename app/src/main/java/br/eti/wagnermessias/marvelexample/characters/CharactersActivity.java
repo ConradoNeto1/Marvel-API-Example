@@ -10,6 +10,7 @@ import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.R;
 import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.helpers.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,6 +27,8 @@ public class CharactersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_characters);
         ButterKnife.bind(this);
+
+        Util.getAuthorizationParameterValues();
 
         for (int i = 1; i <= 10;i++ ) {
             characters.add(new Character("Spider-Man", "http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b.jpg"));
