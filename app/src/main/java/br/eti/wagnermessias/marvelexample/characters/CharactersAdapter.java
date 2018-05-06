@@ -48,7 +48,7 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Vi
         holder.character_name.setText(character.getName());
 
         Glide.with(mContexto)
-                .load(character.getImagem())
+                .load(character.getThumbnailImagem())
                 .placeholder(R.mipmap.ic_launcher_round)
                 .centerCrop()
                 .into(holder.thumbnail);

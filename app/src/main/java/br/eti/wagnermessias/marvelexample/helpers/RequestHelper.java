@@ -1,9 +1,17 @@
 package br.eti.wagnermessias.marvelexample.helpers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import br.eti.wagnermessias.marvelexample.entities.Character;
 
 /**
  * Created by Wagner on 01/05/2018.
@@ -27,4 +35,18 @@ public class RequestHelper {
 
         return queryMap;
     }
+
+    public static Map<String, String> getLimitOffsetMap(Integer limit, Integer countOffset ) {
+
+        Map<String, String> queryMap = new HashMap<String, String>();
+
+        Integer offset = (countOffset * limit) - limit;
+
+        queryMap.put("limit", limit.toString());
+        queryMap.put("offset",offset.toString());
+
+        return queryMap;
+    }
+
+
 }
