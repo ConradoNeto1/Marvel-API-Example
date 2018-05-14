@@ -23,12 +23,12 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
 
     @BindView(R.id.rv_characters)
     RecyclerView mRecyclerView;
-    private List<Character> characters = new ArrayList<>();
     private AutoFitGridLayoutManager layoutManager;
     private CharactersAdapter adapter;
     private CharactersPresenter presenter;
     private Context mContext;
     private int countOffset = 1;
+    private List<Character> characters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +36,15 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
         setContentView(R.layout.activity_characters);
         ButterKnife.bind(this);
         mContext = this;
-
+        presenter = new CharactersPresenter(this);
         init();
-//        for (int i = 1; i <= 10; i++) {
-//            characters.add(new Character("Spider-Man", "http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b.jpg"));
-//        }
-//
-//        initRecyclerView(characters);
+
     }
 
     public void init(){
 //        ActionBar ab = getSupportActionBar();
 //        ab.setTitle("Github JavaPop");
-        presenter = new CharactersPresenter(this);
+
         presenter.loadCharacters(countOffset);
         //presenter.start();
     }
@@ -91,7 +87,7 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
 
     @Override
     public Context getContexto() {
-        return null;
+        return mContext;
     }
 
     @Override

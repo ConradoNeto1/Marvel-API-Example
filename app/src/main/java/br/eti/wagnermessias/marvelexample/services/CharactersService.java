@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.eti.wagnermessias.marvelexample.characters.CharactersContract;
+import br.eti.wagnermessias.marvelexample.entities.AppDatabase;
 import br.eti.wagnermessias.marvelexample.entities.Character;
 import br.eti.wagnermessias.marvelexample.entities.Data;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
@@ -27,13 +28,15 @@ import static br.eti.wagnermessias.marvelexample.helpers.RequestHelper.getLimitO
 
 public class CharactersService implements CharactersServiceContract {
 
+    private AppDatabase db;
     public CharactersContract.Presenter presenter;
     private MarvelAPI serviceMarvel;
     private final int LIMIT_CHARACTERS = 20;
 
-    public CharactersService(final CharactersContract.Presenter presenter) {
+    public CharactersService(CharactersContract.Presenter presenter) {
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
+        db = AppDatabase.getAppDatabase(presenter.getContextoView());
     }
 
     @Override
@@ -51,9 +54,14 @@ public class CharactersService implements CharactersServiceContract {
                 if (response.isSuccessful()) {
                     response.body();
                     Data resposta = response.body().getData();
-                    List<Character> characters = converterResults(resposta.getResults());
-                    if(characters.size() > 0) {
-                        presenter.addData(characters);
+                    List<Character> charactersAPI = converterResults(resposta.getResults());
+                    if(charactersAPI.size() > 0) {
+
+                        db.characterDao().insertCharacters(charactersAPI);
+                        List<Character> charactersDB = db.characterDao().getAll();
+
+                        presenter.addData(charactersDB);
+
                     }else{
                         presenter.toDecreaseCountOffset();
                     }

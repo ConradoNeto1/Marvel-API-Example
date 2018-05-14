@@ -1,5 +1,11 @@
 package br.eti.wagnermessias.marvelexample.entities;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,37 +14,40 @@ import java.util.List;
 /**
  * Created by Wagner on 23/04/2018.
  */
-
+@Entity
 public class Character {
 
     @SerializedName("id")
     @Expose
+    @PrimaryKey
     private Integer id;
+
     @SerializedName("name")
     @Expose
     private String name;
+
     @SerializedName("description")
     @Expose
     private String description;
+
     @SerializedName("modified")
     @Expose
     private String modified;
 
-    private String imagem;
-
-    public String getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
-    }
-    @SerializedName("thumbnail")
-    @Expose
-    private Thumbnail thumbnail;
     @SerializedName("resourceURI")
     @Expose
     private String resourceURI;
+
+    @SerializedName("thumbnail")
+    @Expose
+    @Embedded(prefix = "thumbnail")
+    private Thumbnail thumbnail;
+
+    @SerializedName("urls")
+    @Expose
+    @Ignore
+    private List<Url> urls = null;
+
 //    @SerializedName("comics")
 //    @Expose
 //    private Comics comics;
@@ -51,20 +60,18 @@ public class Character {
 //    @SerializedName("events")
 //    @Expose
 //    private Events events;
-    @SerializedName("urls")
-    @Expose
-    private List<Url> urls = null;
+
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Character() {
-    }
-    public Character(String name,String imagem) {
-        this.name = name;
-                this.imagem = imagem;
-    }
+//    public Character() {
+//    }
+//    public Character(String name,String imagem) {
+//        this.name = name;
+//                this.imagem = imagem;
+//    }
 
 //    /**
 //     *
@@ -136,19 +143,24 @@ public class Character {
     }
 
     public String getThumbnailImagem() {
-
-
         return thumbnail.getPath() +"."+ thumbnail.getExtension();
     }
 
+    public String getResourceURI() {
+        return resourceURI;
+    }
 
-//    public String getResourceURI() {
-//        return resourceURI;
-//    }
-//
-//    public void setResourceURI(String resourceURI) {
-//        this.resourceURI = resourceURI;
-//    }
+    public void setResourceURI(String resourceURI) {
+        this.resourceURI = resourceURI;
+    }
+
+    public List<Url> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<Url> urls) {
+        this.urls = urls;
+    }
 
 //    public Comics getComics() {
 //        return comics;
@@ -182,11 +194,5 @@ public class Character {
 //        this.events = events;
 //    }
 
-    public List<Url> getUrls() {
-        return urls;
-    }
 
-    public void setUrls(List<Url> urls) {
-        this.urls = urls;
-    }
 }

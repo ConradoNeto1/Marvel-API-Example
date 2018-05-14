@@ -36,7 +36,10 @@ public interface CharactersContract {
         void addData(List<Character> characters);
 
         void notifyErro(String msgErro);
+
         void toDecreaseCountOffset();
+
+        Context getContextoView();
 //
 //        void notifyErro(String msgErro, boolean toDecreasePage);
 //
