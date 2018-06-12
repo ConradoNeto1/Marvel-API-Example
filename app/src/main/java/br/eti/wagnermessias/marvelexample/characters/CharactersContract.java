@@ -34,6 +34,8 @@ public interface CharactersContract {
         void loadCharacters(int countOffset);
 
         void addData(List<Character> characters);
+        void deleteItem(Character character);
+        void removeItemDisplay(Character character);
 
         void notifyErro(String msgErro);
 

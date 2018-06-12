@@ -18,7 +18,6 @@ import br.eti.wagnermessias.marvelexample.entities.AppDatabase;
 import br.eti.wagnermessias.marvelexample.entities.Character;
 import br.eti.wagnermessias.marvelexample.entities.Data;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +30,7 @@ public class CharactersService implements CharactersServiceContract {
     private AppDatabase db;
     public CharactersContract.Presenter presenter;
     private MarvelAPI serviceMarvel;
+    private int countOffset = 0;
     private final int LIMIT_CHARACTERS = 20;
 
     public CharactersService(CharactersContract.Presenter presenter) {
@@ -42,9 +42,11 @@ public class CharactersService implements CharactersServiceContract {
     @Override
     public void getCharactersAPI(int countOffset) {
 
-        Map<String,String> queryMap = new HashMap<String,String>();
+        this.countOffset = countOffset;
+
+        Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.putAll(getAuthorizationQueryMap());
-        queryMap.putAll(getLimitOffsetMap(LIMIT_CHARACTERS,countOffset));
+        queryMap.putAll(getLimitOffsetMap(LIMIT_CHARACTERS, countOffset));
 
         Call<ResponseAPI> call = serviceMarvel.getCharacters(queryMap);
 
@@ -55,14 +57,22 @@ public class CharactersService implements CharactersServiceContract {
                     response.body();
                     Data resposta = response.body().getData();
                     List<Character> charactersAPI = converterResults(resposta.getResults());
-                    if(charactersAPI.size() > 0) {
+                    if (charactersAPI.size() > 0) {
 
-                        db.characterDao().insertCharacters(charactersAPI);
-                        List<Character> charactersDB = db.characterDao().getAll();
+
+                        insertOrUpdate(charactersAPI);
+
+                        // db.characterDao().insertCharacters(charactersAPI);
+
+                        int offset = getOffset();
+                        int limit = getLimit();
+
+                        List<Character> charactersDB = db.characterDao().getAll(limit, offset);
 
                         presenter.addData(charactersDB);
+//                        presenter.addData(charactersAPI);
 
-                    }else{
+                    } else {
                         presenter.toDecreaseCountOffset();
                     }
                 }
@@ -76,12 +86,55 @@ public class CharactersService implements CharactersServiceContract {
         });
     }
 
-    private List<Character> converterResults(List<?> result){
+    @Override
+    public void deleteCharacter(Character character) {
+        db.characterDao().delete(character);
+        presenter.removeItemDisplay(character);
+
+    }
+
+
+    private List<Character> converterResults(List<?> result) {
         Gson gson = new Gson();
         String jsonList = gson.toJson(result);
 
-        Type listType = new TypeToken<ArrayList<Character>>(){}.getType();
-        List<Character>  list = gson.fromJson(jsonList,listType);
+        Type listType = new TypeToken<ArrayList<Character>>() {
+        }.getType();
+        List<Character> list = gson.fromJson(jsonList, listType);
         return list;
+    }
+
+    public void insertOrUpdate(List<Character> characters) {
+
+        List<Character> characterToUpdate = new ArrayList<>();
+        List<Character> characterToInsert = new ArrayList<>();
+
+        for (Character character : characters) {
+
+            Character characterResult = db.characterDao().loadCharacterById(character.getId());
+            if (characterResult != null) {
+                characterToUpdate.add(character);
+            }else{
+                characterToInsert.add(character);
+            }
+        }
+
+        if(characterToInsert != null && characterToInsert.size() > 0){
+            db.characterDao().insertAll(characterToInsert);
+        }
+
+        if(characterToUpdate != null && characterToUpdate.size() > 0){
+            db.characterDao().updateAll(characterToUpdate);
+        }
+    }
+
+
+    private int getOffset() {
+        int offset = (this.countOffset * this.LIMIT_CHARACTERS) - this.LIMIT_CHARACTERS;
+        return offset;
+    }
+
+    private int getLimit() {
+        return this.LIMIT_CHARACTERS;
     }
 }

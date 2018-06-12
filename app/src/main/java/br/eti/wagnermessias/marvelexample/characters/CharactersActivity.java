@@ -1,9 +1,11 @@
 package br.eti.wagnermessias.marvelexample.characters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,7 +21,7 @@ import br.eti.wagnermessias.marvelexample.entities.Character;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CharactersActivity extends AppCompatActivity implements CharactersContract.View {
+public class CharactersActivity extends AppCompatActivity implements CharactersContract.View, CharactersAdapter.ItemClickListener {
 
     @BindView(R.id.rv_characters)
     RecyclerView mRecyclerView;
@@ -38,48 +40,43 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
         mContext = this;
         presenter = new CharactersPresenter(this);
         init();
-
     }
 
-    public void init(){
-//        ActionBar ab = getSupportActionBar();
-//        ab.setTitle("Github JavaPop");
-
+    public void init() {
+        ActionBar ab = getSupportActionBar();
+        ab.setTitle("Characters");
         presenter.loadCharacters(countOffset);
-        //presenter.start();
     }
 
     //    https://www.journaldev.com/13792/android-gridlayoutmanager-example
     public void initRecyclerView(List<Character> characters) {
-        //btn_tray_again.setVisibility(View.GONE);
         this.characters = characters;
         mRecyclerView.setHasFixedSize(true);
         layoutManager = new AutoFitGridLayoutManager(this, 200);
         mRecyclerView.setLayoutManager(layoutManager);
         adapter = new CharactersAdapter(this, this.characters);
-//        adapter.setClickListener(this);
+        adapter.setClickListener(this);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(createInfiniteScrollListener());
-//        showLoadingRecyclerView(false);
     }
 
-    public void updateRecyclerView(List<Character> repositories) {
-//        btn_tray_again.setVisibility(View.GONE);
-//        showLoadingRecyclerView(false);
-        this.characters = repositories;
+    @Override
+    public void updateRecyclerView(List<Character> characters) {
+        this.characters = characters;
         adapter.notifyDataSetChanged();
     }
 
     @NonNull
     private InfiniteScrollListener createInfiniteScrollListener() {
-        return new InfiniteScrollListener(4,layoutManager) {
-            @Override public void onScrolledToEnd(final int firstVisibleItemPosition) {
+        return new InfiniteScrollListener(4, layoutManager) {
+            @Override
+            public void onScrolledToEnd(final int firstVisibleItemPosition) {
                 ++countOffset;
                 presenter.loadCharacters(countOffset);
-
             }
         };
     }
+
     @Override
     public void setPresenter(CharactersContract.Presenter presenter) {
         presenter = presenter;
@@ -96,16 +93,8 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
     }
 
     @Override
-    public void showErroDisplay(String msgErro){
-//        showLoadingRecyclerView(false);
+    public void showErroDisplay(String msgErro) {
         Toast.makeText(this, msgErro, Toast.LENGTH_SHORT).show();
-
-//        if (repositories == null || repositories.size() < 1) {
-//            btn_tray_again.setVisibility(View.VISIBLE);
-//        } else {
-//            btn_tray_again.setVisibility(View.GONE);
-//        }
-
     }
 
     public int getCountOffset() {
@@ -114,5 +103,26 @@ public class CharactersActivity extends AppCompatActivity implements CharactersC
 
     public void setCountOffset(int countOffset) {
         this.countOffset = countOffset;
+    }
+
+    @Override
+    public void onItemClick(View view, final int position) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Deseja excluir o Character?");
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                presenter.deleteItem(characters.get(position));
+
+                String msg = characters.get(position).getName() + " foi excluído!";
+                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

@@ -45,6 +45,18 @@ public class CharactersPresenter implements CharactersContract.Presenter{
     }
 
     @Override
+    public void deleteItem(Character character) {
+        service.deleteCharacter(character);
+    }
+
+    @Override
+    public void removeItemDisplay(Character character) {
+        List<Character> characters = viewCharacters.getCharacters();
+        characters.remove(character);
+        viewCharacters.updateRecyclerView(characters);
+    }
+
+    @Override
     public void notifyErro(String msgErro) {
         viewCharacters.showErroDisplay(msgErro);
     }
