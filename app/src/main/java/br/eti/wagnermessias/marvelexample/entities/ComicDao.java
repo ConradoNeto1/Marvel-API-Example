@@ -9,25 +9,22 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-/**
- * Created by Wagner on 13/05/2018.
- */
 @Dao
-public interface CharacterDao {
+public interface ComicDao {
 
-    @Query("SELECT * FROM Character LIMIT :limit OFFSET :offset ")
-    List<Character> getAll(int limit, int offset);
+    @Query("SELECT * FROM Comic LIMIT :limit OFFSET :offset ")
+    List<Comic> getAll(int limit, int offset);
 
-    @Query("SELECT * FROM Character WHERE id = :id")
-    Character loadById(int id);
+    @Query("SELECT * FROM Comic WHERE id = :id")
+    Comic loadById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<Character> characters);
+    public void insertAll(List<Comic> comics);
 
     @Update
-    public void updateAll(List<Character> characters);
+    public void updateAll(List<Comic> comics);
 
     @Delete
-    void delete(Character character);
+    void delete(Comic comic);
 
 }

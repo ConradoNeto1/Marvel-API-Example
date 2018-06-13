@@ -1,9 +1,5 @@
 package br.eti.wagnermessias.marvelexample.services;
 
-/**
- * Created by Wagner on 05/05/2018.
- */
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -13,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.eti.wagnermessias.marvelexample.characters.CharactersContract;
+import br.eti.wagnermessias.marvelexample.comics.ComicsContract;
 import br.eti.wagnermessias.marvelexample.entities.AppDatabase;
-import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.entities.Comic;
 import br.eti.wagnermessias.marvelexample.entities.Data;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
 import retrofit2.Call;
@@ -25,22 +21,22 @@ import retrofit2.Response;
 import static br.eti.wagnermessias.marvelexample.helpers.RequestHelper.getAuthorizationQueryMap;
 import static br.eti.wagnermessias.marvelexample.helpers.RequestHelper.getLimitOffsetMap;
 
-public class CharactersService implements CharactersServiceContract {
+public class ComicsService implements ComicsServiceContract{
 
     private AppDatabase db;
-    public CharactersContract.Presenter presenter;
+    public ComicsContract.Presenter presenter;
     private MarvelAPI serviceMarvel;
     private int countOffset = 0;
     private final int LIMIT = 20;
 
-    public CharactersService(CharactersContract.Presenter presenter) {
+    public ComicsService(ComicsContract.Presenter presenter) {
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
         db = AppDatabase.getAppDatabase(presenter.getContextoView());
     }
 
     @Override
-    public void getCharactersAPI(int countOffset) {
+    public void getComicAPI(int countOffset) {
 
         this.countOffset = countOffset;
 
@@ -48,7 +44,7 @@ public class CharactersService implements CharactersServiceContract {
         queryMap.putAll(getAuthorizationQueryMap());
         queryMap.putAll(getLimitOffsetMap(LIMIT, countOffset));
 
-        Call<ResponseAPI> call = serviceMarvel.getCharacters(queryMap);
+        Call<ResponseAPI> call = serviceMarvel.getComics(queryMap);
 
         call.enqueue(new Callback<ResponseAPI>() {
             @Override
@@ -56,20 +52,17 @@ public class CharactersService implements CharactersServiceContract {
                 if (response.isSuccessful()) {
                     response.body();
                     Data resposta = response.body().getData();
-                    List<Character> charactersAPI = converterResults(resposta.getResults());
-                    if (charactersAPI.size() > 0) {
+                    List<Comic> comicsAPI = converterResults(resposta.getResults());
+                    if (comicsAPI.size() > 0) {
 
-
-                        insertOrUpdate(charactersAPI);
-
-                        // db.characterDao().insertCharacters(charactersAPI);
+                        insertOrUpdate(comicsAPI);
 
                         int offset = getOffset();
                         int limit = getLimit();
 
-                        List<Character> charactersDB = db.characterDao().getAll(limit, offset);
-                        presenter.addData(charactersDB);
+                        List<Comic> comicsDB = db.comicDao().getAll(limit, offset);
 
+                        presenter.addData(comicsDB);
                     } else {
                         presenter.toDecreaseCountOffset();
                     }
@@ -85,47 +78,44 @@ public class CharactersService implements CharactersServiceContract {
     }
 
     @Override
-    public void deleteCharacter(Character character) {
-        db.characterDao().delete(character);
-        presenter.removeItemDisplay(character);
-
+    public void deleteComic(Comic comic) {
+        db.comicDao().delete(comic);
+        presenter.removeItemDisplay(comic);
     }
 
-
-    private List<Character> converterResults(List<?> result) {
+    private List<Comic> converterResults(List<?> result) {
         Gson gson = new Gson();
         String jsonList = gson.toJson(result);
 
-        Type listType = new TypeToken<ArrayList<Character>>() {
+        Type listType = new TypeToken<ArrayList<Comic>>() {
         }.getType();
-        List<Character> list = gson.fromJson(jsonList, listType);
+        List<Comic> list = gson.fromJson(jsonList, listType);
         return list;
     }
 
-    public void insertOrUpdate(List<Character> characters) {
+    public void insertOrUpdate(List<Comic> comics) {
 
-        List<Character> characterToUpdate = new ArrayList<>();
-        List<Character> characterToInsert = new ArrayList<>();
+        List<Comic> comicsToUpdate = new ArrayList<>();
+        List<Comic> comicsToInsert = new ArrayList<>();
 
-        for (Character character : characters) {
+        for (Comic comic : comics) {
 
-            Character characterResult = db.characterDao().loadById(character.getId());
-            if (characterResult != null) {
-                characterToUpdate.add(character);
+            Comic comicResult = db.comicDao().loadById(comic.getId());
+            if (comicResult != null) {
+                comicsToUpdate.add(comic);
             }else{
-                characterToInsert.add(character);
+                comicsToInsert.add(comic);
             }
         }
 
-        if(characterToInsert != null && characterToInsert.size() > 0){
-            db.characterDao().insertAll(characterToInsert);
+        if(comicsToInsert != null && comicsToInsert.size() > 0){
+            db.comicDao().insertAll(comicsToInsert);
         }
 
-        if(characterToUpdate != null && characterToUpdate.size() > 0){
-            db.characterDao().updateAll(characterToUpdate);
+        if(comicsToUpdate != null && comicsToUpdate.size() > 0){
+            db.comicDao().updateAll(comicsToUpdate);
         }
     }
-
 
     private int getOffset() {
         int offset = (this.countOffset * this.LIMIT) - this.LIMIT;
@@ -135,4 +125,5 @@ public class CharactersService implements CharactersServiceContract {
     private int getLimit() {
         return this.LIMIT;
     }
+
 }

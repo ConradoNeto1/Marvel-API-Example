@@ -50,7 +50,7 @@ public class Character {
 
 //    @SerializedName("comics")
 //    @Expose
-//    private Comics comics;
+//    private Comic comics;
 //    @SerializedName("series")
 //    @Expose
 //    private Series series;
@@ -87,7 +87,7 @@ public class Character {
 //     * @param comics
 //     * @param modified
 //     */
-//    public Character(Integer id, String name, String description, String modified, Thumbnail thumbnail, String resourceURI, Comics comics, Series series, Stories stories, Events events, List<Url> urls) {
+//    public Character(Integer id, String name, String description, String modified, Thumbnail thumbnail, String resourceURI, Comic comics, Series series, Stories stories, Events events, List<Url> urls) {
 //        super();
 //        this.id = id;
 //        this.name = name;
@@ -162,11 +162,11 @@ public class Character {
         this.urls = urls;
     }
 
-//    public Comics getComics() {
+//    public Comic getComics() {
 //        return comics;
 //    }
 //
-//    public void setComics(Comics comics) {
+//    public void setComics(Comic comics) {
 //        this.comics = comics;
 //    }
 //
