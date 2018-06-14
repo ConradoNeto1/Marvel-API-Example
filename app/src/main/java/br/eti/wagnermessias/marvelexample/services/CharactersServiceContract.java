@@ -8,5 +8,6 @@ import br.eti.wagnermessias.marvelexample.entities.Character;
 
 interface CharactersServiceContract {
     void getCharactersAPI(int countOffset);
+    void getCharactersDB();
     void deleteCharacter(Character character);
 }

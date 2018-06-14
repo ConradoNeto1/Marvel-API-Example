@@ -12,8 +12,8 @@ import java.util.List;
 @Dao
 public interface ComicDao {
 
-    @Query("SELECT * FROM Comic LIMIT :limit OFFSET :offset ")
-    List<Comic> getAll(int limit, int offset);
+    @Query("SELECT * FROM Comic")
+    List<Comic> getAll();
 
     @Query("SELECT * FROM Comic WHERE id = :id")
     Comic loadById(int id);

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.entities.Comic;
+import br.eti.wagnermessias.marvelexample.helpers.NetworkHelper;
 import br.eti.wagnermessias.marvelexample.services.ComicsService;
 
 public class ComicsPresenter implements ComicsContract.Presenter {
@@ -22,21 +23,35 @@ public class ComicsPresenter implements ComicsContract.Presenter {
 
     @Override
     public void loadComics(int countOffset) {
-        service.getComicAPI(countOffset);
+        if (NetworkHelper.verificaConexao(viewComics.getContexto())) {
+            service.getComicsAPI(countOffset);
+        } else {
+            service.getComicsDB();
+            notifyErro("Sem conexão com Internet");
+        }
+
     }
 
     @Override
-    public void addData(List<Comic> comicsNews) {
+    public void addData(List<Comic> comicsNews, String origin) {
         List<Comic> comicsOld = viewComics.getComics();
-
-        if (mFirstLoad && comicsOld.size() <= 0 && comicsNews.size() > 0) {
-            viewComics.initRecyclerView(comicsNews);
-            mFirstLoad = false;
-        } else if (comicsOld.size() > 0 || comicsNews.size() > 0) {
-            comicsOld.addAll(comicsNews);
-            viewComics.updateRecyclerView(comicsOld);
-        } else {
-            // viewRepositories.showError("Nenhum repositório foi encontrado");
+        if(!origin.equals("DB")) {
+            if (mFirstLoad && comicsOld.size() <= 0 && comicsNews.size() > 0) {
+                viewComics.initRecyclerView(comicsNews);
+                mFirstLoad = false;
+            } else if (comicsOld.size() > 0 || comicsNews.size() > 0) {
+                comicsOld.addAll(comicsNews);
+                viewComics.updateRecyclerView(comicsOld);
+            } else {
+                // viewRepositories.showError("Nenhum repositório foi encontrado");
+            }
+        }else {
+            if(mFirstLoad){
+                viewComics.initRecyclerView(comicsNews);
+            }else{
+                mFirstLoad = true;
+                viewComics.updateRecyclerView(comicsNews);
+            }
         }
     }
 

@@ -9,4 +9,12 @@
         <item name="android:colorBackground">@color/backgroundColor</item>
     </style>
 
+    <style name="cardTextDashboard">
+        <item name="android:textColor">@color/backgroundColor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:layout_width">80dp</item>
+    </style>
+
 </resources>

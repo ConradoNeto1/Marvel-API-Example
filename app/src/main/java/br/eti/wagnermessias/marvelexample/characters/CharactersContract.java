@@ -33,7 +33,7 @@ public interface CharactersContract {
     interface Presenter{
         void loadCharacters(int countOffset);
 
-        void addData(List<Character> characters);
+        void addData(List<Character> characters, String origin);
         void deleteItem(Character character);
         void removeItemDisplay(Character character);
 

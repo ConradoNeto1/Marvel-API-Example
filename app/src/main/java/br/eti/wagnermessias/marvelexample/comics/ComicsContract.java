@@ -23,7 +23,7 @@ public interface ComicsContract {
     interface Presenter{
         void loadComics(int countOffset);
 
-        void addData(List<Comic> comics);
+        void addData(List<Comic> comics, String origin);
         void deleteItem(Comic comic);
         void removeItemDisplay(Comic comic);
 

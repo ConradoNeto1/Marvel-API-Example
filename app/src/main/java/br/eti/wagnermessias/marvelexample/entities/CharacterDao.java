@@ -15,8 +15,8 @@ import java.util.List;
 @Dao
 public interface CharacterDao {
 
-    @Query("SELECT * FROM Character LIMIT :limit OFFSET :offset ")
-    List<Character> getAll(int limit, int offset);
+    @Query("SELECT * FROM Character")
+    List<Character> getAll();
 
     @Query("SELECT * FROM Character WHERE id = :id")
     Character loadById(int id);

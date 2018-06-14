@@ -167,6 +167,10 @@ public class Comic {
         return thumbnail;
     }
 
+    public String getThumbnailImagem() {
+        return thumbnail.getPath() +"."+ thumbnail.getExtension();
+    }
+
     public void setDigitalId(Integer digitalId) {
         this.digitalId = digitalId;
     }

@@ -7,5 +7,6 @@
     <color name="primaryLightColor">#484848</color>
     <color name="backgroundColor">#424242</color>
     <color name="cardColor">#212121</color>
+    <color name="yellowDashboard">#FFDE03</color>
 
 </resources>

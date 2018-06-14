@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.helpers.NetworkHelper;
 import br.eti.wagnermessias.marvelexample.services.CharactersService;
 
 /**
@@ -26,21 +27,37 @@ public class CharactersPresenter implements CharactersContract.Presenter{
 
     @Override
     public void loadCharacters(int countOffset) {
-        service.getCharactersAPI(countOffset);
+
+        if (NetworkHelper.verificaConexao(viewCharacters.getContexto())) {
+            service.getCharactersAPI(countOffset);
+        } else {
+            service.getCharactersDB();
+            notifyErro("Sem conexão com Internet");
+        }
+
     }
 
     @Override
-    public void addData(List<Character> charactersNews) {
+    public void addData(List<Character> charactersNews,String origin) {
             List<Character> charactersOld = viewCharacters.getCharacters();
+            if(!origin.equals("DB")) {
+                if (mFirstLoad && charactersOld.size() <= 0 && charactersNews.size() > 0) {
+                    viewCharacters.initRecyclerView(charactersNews);
+                    mFirstLoad = false;
+                } else if (charactersOld.size() > 0 || charactersNews.size() > 0) {
+                    charactersOld.addAll(charactersNews);
+                    viewCharacters.updateRecyclerView(charactersOld);
+                } else {
+                    // viewRepositories.showError("Nenhum repositório foi encontrado");
+                }
+            }else {
+                if(mFirstLoad){
+                    viewCharacters.initRecyclerView(charactersNews);
+                }else{
+                    mFirstLoad = true;
+                    viewCharacters.updateRecyclerView(charactersNews);
+                }
 
-            if (mFirstLoad && charactersOld.size() <= 0 && charactersNews.size() > 0) {
-                viewCharacters.initRecyclerView(charactersNews);
-                mFirstLoad = false;
-            } else if (charactersOld.size() > 0 || charactersNews.size() > 0) {
-                charactersOld.addAll(charactersNews);
-                viewCharacters.updateRecyclerView(charactersOld);
-            } else {
-               // viewRepositories.showError("Nenhum repositório foi encontrado");
             }
     }
 

@@ -57,21 +57,10 @@ public class CharactersService implements CharactersServiceContract {
                     response.body();
                     Data resposta = response.body().getData();
                     List<Character> charactersAPI = converterResults(resposta.getResults());
-                    if (charactersAPI.size() > 0) {
-
-
+                    if (charactersAPI != null && charactersAPI.size() > 0) {
                         insertOrUpdate(charactersAPI);
+                        presenter.addData(charactersAPI, "API");
 
-                        // db.characterDao().insertCharacters(charactersAPI);
-
-                        int offset = getOffset();
-                        int limit = getLimit();
-
-                        List<Character> charactersDB = db.characterDao().getAll(limit, offset);
-                        presenter.addData(charactersDB);
-
-                    } else {
-                        presenter.toDecreaseCountOffset();
                     }
                 }
             }
@@ -82,6 +71,14 @@ public class CharactersService implements CharactersServiceContract {
                 presenter.notifyErro("Servidor indisponível no momento!");
             }
         });
+    }
+
+    @Override
+    public void getCharactersDB() {
+        List<Character> charactersDB = db.characterDao().getAll();
+        if (charactersDB != null && charactersDB.size() > 0) {
+            presenter.addData(charactersDB, "DB");
+        }
     }
 
     @Override
@@ -112,18 +109,20 @@ public class CharactersService implements CharactersServiceContract {
             Character characterResult = db.characterDao().loadById(character.getId());
             if (characterResult != null) {
                 characterToUpdate.add(character);
-            }else{
+            } else {
                 characterToInsert.add(character);
             }
         }
 
-        if(characterToInsert != null && characterToInsert.size() > 0){
+        if (characterToInsert != null && characterToInsert.size() > 0) {
             db.characterDao().insertAll(characterToInsert);
         }
 
-        if(characterToUpdate != null && characterToUpdate.size() > 0){
+        if (characterToUpdate != null && characterToUpdate.size() > 0) {
             db.characterDao().updateAll(characterToUpdate);
         }
+
+
     }
 
 

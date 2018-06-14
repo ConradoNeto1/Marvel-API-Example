@@ -36,7 +36,7 @@ public class ComicsService implements ComicsServiceContract{
     }
 
     @Override
-    public void getComicAPI(int countOffset) {
+    public void getComicsAPI(int countOffset) {
 
         this.countOffset = countOffset;
 
@@ -53,18 +53,9 @@ public class ComicsService implements ComicsServiceContract{
                     response.body();
                     Data resposta = response.body().getData();
                     List<Comic> comicsAPI = converterResults(resposta.getResults());
-                    if (comicsAPI.size() > 0) {
-
+                    if (comicsAPI != null && comicsAPI.size() > 0) {
                         insertOrUpdate(comicsAPI);
-
-                        int offset = getOffset();
-                        int limit = getLimit();
-
-                        List<Comic> comicsDB = db.comicDao().getAll(limit, offset);
-
-                        presenter.addData(comicsDB);
-                    } else {
-                        presenter.toDecreaseCountOffset();
+                        presenter.addData(comicsAPI,"API");
                     }
                 }
             }
@@ -77,6 +68,13 @@ public class ComicsService implements ComicsServiceContract{
         });
     }
 
+    @Override
+    public void getComicsDB() {
+        List<Comic> comicsDB = db.comicDao().getAll();
+        if (comicsDB != null && comicsDB.size() > 0) {
+            presenter.addData(comicsDB, "DB");
+        }
+    }
     @Override
     public void deleteComic(Comic comic) {
         db.comicDao().delete(comic);
@@ -115,15 +113,6 @@ public class ComicsService implements ComicsServiceContract{
         if(comicsToUpdate != null && comicsToUpdate.size() > 0){
             db.comicDao().updateAll(comicsToUpdate);
         }
-    }
-
-    private int getOffset() {
-        int offset = (this.countOffset * this.LIMIT) - this.LIMIT;
-        return offset;
-    }
-
-    private int getLimit() {
-        return this.LIMIT;
     }
 
 }

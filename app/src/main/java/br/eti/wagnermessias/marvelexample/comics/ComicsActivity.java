@@ -1,12 +1,10 @@
-package br.eti.wagnermessias.marvelexample.characters;
+package br.eti.wagnermessias.marvelexample.comics;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -18,52 +16,53 @@ import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.R;
 import br.eti.wagnermessias.marvelexample.base.BaseActivity;
-import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.characters.AutoFitGridLayoutManager;
+import br.eti.wagnermessias.marvelexample.entities.Comic;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CharactersActivity extends BaseActivity implements CharactersContract.View, CharactersAdapter.ItemClickListener {
+public class ComicsActivity extends BaseActivity implements ComicsContract.View, ComicsAdapter.ItemClickListener{
 
-    @BindView(R.id.rv_characters)
+    private Context mContext;
+    private ComicsPresenter presenter;
+
+    @BindView(R.id.rv_comics)
     RecyclerView mRecyclerView;
     private AutoFitGridLayoutManager layoutManager;
-    private CharactersAdapter adapter;
-    private CharactersPresenter presenter;
-    private Context mContext;
+    private ComicsAdapter adapter;
     private int countOffset = 1;
-    private List<Character> characters = new ArrayList<>();
+    private List<Comic> comics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_characters);
+        setContentView(R.layout.activity_comics);
         ButterKnife.bind(this);
         mContext = this;
-        presenter = new CharactersPresenter(this);
+        presenter = new ComicsPresenter(this);
         init();
     }
 
-    public void init() {
+    private void init() {
         enabledBackButon();
-        setTitleActionbar("Characters");
-        presenter.loadCharacters(countOffset);
+        setTitleActionbar("Comics");
+        presenter.loadComics(countOffset);
     }
 
-    //    https://www.journaldev.com/13792/android-gridlayoutmanager-example
-    public void initRecyclerView(List<Character> characters) {
-        this.characters = characters;
+    public void initRecyclerView(List<Comic> comics) {
+        this.comics = comics;
         mRecyclerView.setHasFixedSize(true);
-        layoutManager = new AutoFitGridLayoutManager(this, 200);
+        layoutManager = new AutoFitGridLayoutManager(this, 300);
         mRecyclerView.setLayoutManager(layoutManager);
-        adapter = new CharactersAdapter(this, this.characters);
+        adapter = new ComicsAdapter(this, this.comics);
         adapter.setClickListener(this);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnScrollListener(createInfiniteScrollListener());
     }
 
     @Override
-    public void updateRecyclerView(List<Character> characters) {
-        this.characters = characters;
+    public void updateRecyclerView(List<Comic> comics) {
+        this.comics = comics;
         adapter.notifyDataSetChanged();
     }
 
@@ -73,13 +72,13 @@ public class CharactersActivity extends BaseActivity implements CharactersContra
             @Override
             public void onScrolledToEnd(final int firstVisibleItemPosition) {
                 ++countOffset;
-                presenter.loadCharacters(countOffset);
+                presenter.loadComics(countOffset);
             }
         };
     }
 
     @Override
-    public void setPresenter(CharactersContract.Presenter presenter) {
+    public void setPresenter(ComicsContract.Presenter presenter) {
         presenter = presenter;
     }
 
@@ -89,8 +88,8 @@ public class CharactersActivity extends BaseActivity implements CharactersContra
     }
 
     @Override
-    public List<Character> getCharacters() {
-        return characters;
+    public List<Comic> getComics() {
+        return comics;
     }
 
     @Override
@@ -110,12 +109,12 @@ public class CharactersActivity extends BaseActivity implements CharactersContra
     public void onItemClick(View view, final int position) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Deseja excluir o Character?");
+        builder.setTitle("Deseja excluir o Comic?");
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                presenter.deleteItem(characters.get(position));
+                presenter.deleteItem(comics.get(position));
 
-                String msg = characters.get(position).getName() + " foi excluído!";
+                String msg = comics.get(position).getTitle() + " foi excluído!";
                 Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -126,4 +125,7 @@ public class CharactersActivity extends BaseActivity implements CharactersContra
         });
         builder.create().show();
     }
+
+
+
 }
