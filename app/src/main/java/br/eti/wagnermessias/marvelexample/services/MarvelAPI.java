@@ -18,6 +18,9 @@ interface MarvelAPI {
 
     @GET("/v1/public/comics")
     Call<ResponseAPI> getComics(@QueryMap Map<String, String> options);
+
+    @GET("/v1/public/events")
+    Call<ResponseAPI> getEvents(@QueryMap Map<String, String> options);
    // Call<ResponseAPI> getCharacters(@Query("q") String q, @Query("sort") String sort, @Query("page") int page);
 
 //    @GET("/repos/{creator}/{repository}/pulls")
