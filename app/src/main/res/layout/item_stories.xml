@@ -8,22 +8,22 @@
     app:ignore="NamespaceTypo">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardView_item_series"
+        android:id="@+id/cardView_item_stories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="3dp"
         android:layout_margin="5dp"
-        card_view:cardBackgroundColor="@color/cardColor"
-      >
+        card_view:cardBackgroundColor="@color/cardColor">
+        
         <RelativeLayout
-            android:id="@+id/relativeLayout_series"
+            android:id="@+id/relativeLayout_stories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_gravity="center">
 
             <ImageView
-                android:id="@+id/iv_serie_thumbnail"
+                android:id="@+id/iv_story_thumbnail"
                 android:layout_width="110dp"
                 android:layout_height="180dp"
                 android:layout_centerInParent="true"
@@ -31,12 +31,12 @@
             />
 
             <TextView
-                android:id="@+id/tv_serie_title"
+                android:id="@+id/tv_story_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:textColor="@android:color/white"
-                android:layout_below="@+id/iv_serie_thumbnail"
+                android:layout_below="@+id/iv_story_thumbnail"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center"

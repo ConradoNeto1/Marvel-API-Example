@@ -17,19 +17,6 @@ public class Thumbnail {
      * No args constructor for use in serialization
      * 
      */
-//    public Thumbnail() {
-//    }
-
-//    /**
-//     *
-//     * @param extension
-//     * @param path
-//     */
-//    public Thumbnail(String path, String extension) {
-//        super();
-//        this.path = path;
-//        this.extension = extension;
-//    }
 
     public String getPath() {
         return path;

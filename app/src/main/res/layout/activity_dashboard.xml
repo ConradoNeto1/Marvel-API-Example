@@ -10,7 +10,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewCharacters"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/height_cardview_dashboard"
         app:cardBackgroundColor="@color/yellowDashboard"
         app:cardCornerRadius="7dp">
 
@@ -27,7 +27,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewComics"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/height_cardview_dashboard"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/yellowDashboard"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,7 +48,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewEvents"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/height_cardview_dashboard"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/yellowDashboard"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -69,7 +69,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewSeries"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/height_cardview_dashboard"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/yellowDashboard"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -85,6 +85,28 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="SERIES" />
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewStories"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_cardview_dashboard"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/yellowDashboard"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardViewSeries"
+        app:cardCornerRadius="7dp"
+        >
+
+        <TextView
+            style="@style/cardTextDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="STORIES" />
 
     </android.support.v7.widget.CardView>
 
