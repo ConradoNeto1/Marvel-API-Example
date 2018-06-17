@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ public class StoriesActivity extends BaseActivity implements StoriesContract.Vie
 
     @BindView(R.id.rv_stories)
     RecyclerView mRecyclerView;
-    private AutoFitGridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private StoriesAdapter adapter;
     private int countOffset = 1;
     private List<Story> stories = new ArrayList<>();
@@ -55,7 +56,7 @@ public class StoriesActivity extends BaseActivity implements StoriesContract.Vie
     public void initRecyclerView(List<Story> stories) {
         this.stories = stories;
         mRecyclerView.setHasFixedSize(true);
-        layoutManager = new AutoFitGridLayoutManager(this, 300);
+        layoutManager  =   new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         adapter = new StoriesAdapter(this, this.stories);
         adapter.setClickListener(this);

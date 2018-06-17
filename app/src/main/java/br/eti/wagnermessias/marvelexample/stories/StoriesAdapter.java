@@ -46,6 +46,9 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHold
         Story story = stories.get(position);
         holder.story_title.setText(story.getTitle());
 
+        holder.story_type.setText(story.getType());
+        holder.story_description.setText(story.getDescription());
+
         Glide.with(mContexto)
                 .load(story.getThumbnailImagem())
                 .placeholder(R.mipmap.ic_launcher_round)
@@ -60,8 +63,14 @@ public class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.tv_story_title)
+        @BindView(R.id.tv_stories_title)
         TextView story_title;
+
+        @BindView(R.id.tv_description)
+        TextView story_description;
+
+        @BindView(R.id.tv_type)
+        TextView story_type;
 
         @BindView(R.id.iv_story_thumbnail)
         ImageView thumbnail;
