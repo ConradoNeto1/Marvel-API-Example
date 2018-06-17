@@ -9,6 +9,8 @@ import android.widget.Toast;
 import br.eti.wagnermessias.marvelexample.R;
 import br.eti.wagnermessias.marvelexample.characters.CharactersActivity;
 import br.eti.wagnermessias.marvelexample.comics.ComicsActivity;
+import br.eti.wagnermessias.marvelexample.events.EventsActivity;
+import br.eti.wagnermessias.marvelexample.series.SeriesActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,11 +43,13 @@ public class DashboardActivity extends AppCompatActivity {
 
     @OnClick(R.id.cardViewEvents)
     public void onCardEventsClicked() {
-        Toast.makeText(this, "Events", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(DashboardActivity.this, EventsActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.cardViewSeries)
     public void onCardSeriesClicked() {
-        Toast.makeText(this, "Series", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(DashboardActivity.this, SeriesActivity.class);
+        startActivity(intent);
     }
 }

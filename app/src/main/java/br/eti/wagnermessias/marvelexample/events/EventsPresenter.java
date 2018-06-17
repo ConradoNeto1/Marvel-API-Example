@@ -19,7 +19,6 @@ public class EventsPresenter implements EventsContract.Presenter{
     public EventsPresenter(@NonNull EventsContract.View view) {
         this.viewEvents = view;
         this.service = new EventsService(this);
-
     }
 
     @Override
