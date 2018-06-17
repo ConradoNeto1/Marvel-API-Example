@@ -18,6 +18,7 @@ import br.eti.wagnermessias.marvelexample.entities.AppDatabase;
 import br.eti.wagnermessias.marvelexample.entities.Character;
 import br.eti.wagnermessias.marvelexample.entities.Data;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
+import br.eti.wagnermessias.marvelexample.entities.Url;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,7 +89,6 @@ public class CharactersService implements CharactersServiceContract {
 
     }
 
-
     private List<Character> converterResults(List<?> result) {
         Gson gson = new Gson();
         String jsonList = gson.toJson(result);
@@ -106,11 +106,17 @@ public class CharactersService implements CharactersServiceContract {
 
         for (Character character : characters) {
 
+            for (Url url : character.getUrls()){
+                url.setCharacterId(character.getId());
+            }
+
             Character characterResult = db.characterDao().loadById(character.getId());
             if (characterResult != null) {
                 characterToUpdate.add(character);
+                db.urlDao().updateAll(character.getUrls());
             } else {
                 characterToInsert.add(character);
+                db.urlDao().updateAll(character.getUrls());
             }
         }
 
@@ -121,8 +127,6 @@ public class CharactersService implements CharactersServiceContract {
         if (characterToUpdate != null && characterToUpdate.size() > 0) {
             db.characterDao().updateAll(characterToUpdate);
         }
-
-
     }
 
 

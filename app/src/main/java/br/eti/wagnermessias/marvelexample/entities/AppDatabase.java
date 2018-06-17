@@ -8,7 +8,7 @@ import android.content.Context;
 /**
  * Created by Wagner on 13/05/2018.
  */
-@Database(entities = {Character.class, Comic.class, Event.class, Serie.class, Story.class}, version = 1)
+@Database(entities = {Character.class, Comic.class, Event.class, Serie.class, Story.class, Url.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
         private static AppDatabase INSTANCE;
@@ -18,6 +18,7 @@ public abstract class AppDatabase extends RoomDatabase {
         public abstract EventDao eventDao();
         public abstract SerieDao serieDao();
         public abstract StoryDao storyDao();
+        public abstract UrlDao urlDao();
 
 
         public static AppDatabase getAppDatabase(Context context) {

@@ -48,20 +48,6 @@ public class Character {
     @Ignore
     private List<Url> urls = null;
 
-//    @SerializedName("comics")
-//    @Expose
-//    private Comic comics;
-//    @SerializedName("series")
-//    @Expose
-//    private Series series;
-//    @SerializedName("stories")
-//    @Expose
-//    private Stories stories;
-//    @SerializedName("events")
-//    @Expose
-//    private Events events;
-
-
     /**
      * No args constructor for use in serialization
      *
