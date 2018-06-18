@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.base.BaseView;
 import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.entities.Url;
 
 /**
  * Created by Wagner on 05/05/2018.
@@ -29,11 +30,22 @@ public interface CharactersContract {
         //        void toDecreasePage();
     }
 
+    interface ViewDetalhes extends BaseView<Presenter> {
+
+        Context getContexto();
+        void initRecyclerView(List<Url> urls);
+        void showErroDisplay(String msgErro);
+
+    }
+
 //    interface Presenter extends BasePresenter {
     interface Presenter{
         void loadCharacters(int countOffset);
 
-        void addData(List<Character> characters, String origin);
+    void loadUrls(Integer idCharacter);
+
+    void addData(List<Character> characters, String origin);
+    void addData(List<Url> urls);
         void deleteItem(Character character);
         void removeItemDisplay(Character character);
 
@@ -42,6 +54,8 @@ public interface CharactersContract {
         void toDecreaseCountOffset();
 
         Context getContextoView();
+
+    Context getContextoViewDetalhe();
 //
 //        void notifyErro(String msgErro, boolean toDecreasePage);
 //

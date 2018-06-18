@@ -13,10 +13,10 @@ import java.util.List;
 public interface UrlDao {
 
     @Query("SELECT * FROM Url")
-    List<Story> getAll();
+    List<Url> getAll();
 
     @Query("SELECT * FROM Url WHERE characterId = :id")
-    Story loadByIdCharacter(int id);
+    List<Url> loadByIdCharacter(Integer id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(List<Url> urls);

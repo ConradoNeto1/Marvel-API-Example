@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.entities.Url;
 import br.eti.wagnermessias.marvelexample.helpers.NetworkHelper;
 import br.eti.wagnermessias.marvelexample.services.CharactersService;
 
@@ -15,13 +16,25 @@ import br.eti.wagnermessias.marvelexample.services.CharactersService;
 
 public class CharactersPresenter implements CharactersContract.Presenter{
 
+    private  Context viewContexto;
     private  CharactersService service;
     private  CharactersContract.View viewCharacters;
+    private  CharactersContract.ViewDetalhes viewDetalheCharacters;
     private boolean mFirstLoad = true;
+    private boolean isViewDetalhe = false;
 
     public CharactersPresenter(@NonNull CharactersContract.View viewCharacters) {
         this.viewCharacters = viewCharacters;
-        this.service = new CharactersService(this);
+        this.service = new CharactersService(this,false);
+        viewContexto = viewCharacters.getContexto();
+
+    }
+
+    public CharactersPresenter(@NonNull CharactersContract.ViewDetalhes viewCharacters) {
+        this.viewDetalheCharacters = viewCharacters;
+        this.service = new CharactersService(this,true);
+        viewContexto = viewDetalheCharacters.getContexto();
+        isViewDetalhe = true;
 
     }
 
@@ -34,6 +47,13 @@ public class CharactersPresenter implements CharactersContract.Presenter{
             service.getCharactersDB();
             notifyErro("Sem conexão com Internet");
         }
+
+    }
+
+    @Override
+    public void loadUrls(Integer idCharacter) {
+
+            service.getUrlsDB(idCharacter);
 
     }
 
@@ -61,6 +81,11 @@ public class CharactersPresenter implements CharactersContract.Presenter{
             }
     }
 
+    public void addData(List<Url> urlsNews) {
+                viewDetalheCharacters.initRecyclerView(urlsNews);
+    }
+
+
     @Override
     public void deleteItem(Character character) {
         service.deleteCharacter(character);
@@ -75,7 +100,13 @@ public class CharactersPresenter implements CharactersContract.Presenter{
 
     @Override
     public void notifyErro(String msgErro) {
-        viewCharacters.showErroDisplay(msgErro);
+
+        if(isViewDetalhe){
+            viewDetalheCharacters.showErroDisplay(msgErro);
+        }else {
+            viewCharacters.showErroDisplay(msgErro);
+        }
+
     }
 
     @Override
@@ -91,6 +122,11 @@ public class CharactersPresenter implements CharactersContract.Presenter{
     @Override
     public Context getContextoView() {
         return viewCharacters.getContexto();
+    }
+
+    @Override
+    public Context getContextoViewDetalhe() {
+        return viewDetalheCharacters.getContexto();
     }
 
 }

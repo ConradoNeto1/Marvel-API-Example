@@ -13,7 +13,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.R;
-import br.eti.wagnermessias.marvelexample.entities.Character;
+import br.eti.wagnermessias.marvelexample.entities.Story;
+import br.eti.wagnermessias.marvelexample.entities.Url;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -21,51 +22,42 @@ import butterknife.ButterKnife;
  * Created by Wagner on 24/04/2018.
  */
 
-public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.ViewHolder> {
+public class UrlsAdapter extends RecyclerView.Adapter<UrlsAdapter.ViewHolder> {
 
-
-    public List<Character> characters;
+    public List<Url> urls;
     private ItemClickListener mClickListener;
     private LayoutInflater mInflater;
     private Context mContexto;
 
 
-    CharactersAdapter(Context context, List<Character> characters) {
+    UrlsAdapter(Context context, List<Url> urls) {
         this.mInflater = LayoutInflater.from(context);
-        this.characters = characters;
+        this.urls = urls;
         this.mContexto = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_characters, parent, false);
+        View view = mInflater.inflate(R.layout.item_url, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Character character = characters.get(position);
-        holder.character_name.setText(character.getName());
 
-        Glide.with(mContexto)
-                .load(character.getThumbnailImagem())
-                .placeholder(R.mipmap.ic_launcher_round)
-                .centerCrop()
-                .into(holder.thumbnail);
+        Url url = urls.get(position);
+        holder.url_type.setText(url.getType().toUpperCase());
 
     }
 
     @Override
     public int getItemCount() {
-        return characters.size();
+        return urls.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        @BindView(R.id.tv_character_name)
-        TextView character_name;
-
-        @BindView(R.id.iv_character_thumbnail)
-        ImageView thumbnail;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.tv_type)
+        TextView url_type;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -77,19 +69,10 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Vi
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if (mClickListener != null) {
-                mClickListener.onLongItemClick(view, getAdapterPosition());
-
-            }
-            return true;
-        }
     }
 
-    Character getItem(int id) {
-        return characters.get(id);
+    Url getItem(int id) {
+        return urls.get(id);
     }
 
     void setClickListener(ItemClickListener itemClickListener) {
@@ -98,6 +81,5 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Vi
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
-        void onLongItemClick(View view, int position);
     }
 }

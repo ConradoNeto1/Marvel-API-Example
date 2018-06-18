@@ -3,6 +3,7 @@ package br.eti.wagnermessias.marvelexample.entities;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -55,7 +56,7 @@ public class Url {
      * @param type
      * @param url
      */
-    public Url(String type, String url,Integer id) {
+    public Url(String type, String url, Integer id) {
         super();
         this.type = type;
         this.url = url;

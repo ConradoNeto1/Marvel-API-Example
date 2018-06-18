@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".characters.CharactersActivity"></activity>
+        <activity android:name=".characters.CharactersActivity" />
         <activity android:name=".dashboard.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,10 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".comics.ComicsActivity"></activity>
-        <activity android:name=".events.EventsActivity"></activity>
-        <activity android:name=".series.SeriesActivity"></activity>
-        <activity android:name=".stories.StoriesActivity"></activity>
+        <activity android:name=".comics.ComicsActivity" />
+        <activity android:name=".events.EventsActivity" />
+        <activity android:name=".series.SeriesActivity" />
+        <activity android:name=".stories.StoriesActivity" />
+        <activity android:name=".characters.DetalheCharacterActivity"></activity>
     </application>
 
 </manifest>

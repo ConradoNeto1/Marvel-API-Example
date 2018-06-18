@@ -34,10 +34,15 @@ public class CharactersService implements CharactersServiceContract {
     private int countOffset = 0;
     private final int LIMIT = 20;
 
-    public CharactersService(CharactersContract.Presenter presenter) {
+    public CharactersService(CharactersContract.Presenter presenter,boolean urls) {
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
-        db = AppDatabase.getAppDatabase(presenter.getContextoView());
+
+        if(!urls) {
+            db = AppDatabase.getAppDatabase(presenter.getContextoView());
+        }else {
+            db = AppDatabase.getAppDatabase(presenter.getContextoViewDetalhe());
+        }
     }
 
     @Override
@@ -82,11 +87,21 @@ public class CharactersService implements CharactersServiceContract {
         }
     }
 
+
+    public void getUrlsDB(Integer id) {
+        List<Url> urlsDB = db.urlDao().loadByIdCharacter(id);
+        if (urlsDB != null && urlsDB.size() > 0) {
+            presenter.addData(urlsDB);
+        }else{
+            presenter.notifyErro("Não foi encontrada urls!");
+        }
+
+    }
+
     @Override
     public void deleteCharacter(Character character) {
         db.characterDao().delete(character);
         presenter.removeItemDisplay(character);
-
     }
 
     private List<Character> converterResults(List<?> result) {
@@ -103,6 +118,8 @@ public class CharactersService implements CharactersServiceContract {
 
         List<Character> characterToUpdate = new ArrayList<>();
         List<Character> characterToInsert = new ArrayList<>();
+        List<Url> urlsToInsert = new ArrayList<>();
+        List<Url> urlsToUpdate = new ArrayList<>();
 
         for (Character character : characters) {
 
@@ -113,19 +130,21 @@ public class CharactersService implements CharactersServiceContract {
             Character characterResult = db.characterDao().loadById(character.getId());
             if (characterResult != null) {
                 characterToUpdate.add(character);
-                db.urlDao().updateAll(character.getUrls());
+                urlsToUpdate.addAll(character.getUrls());
             } else {
                 characterToInsert.add(character);
-                db.urlDao().updateAll(character.getUrls());
+                urlsToInsert.addAll(character.getUrls());
             }
         }
 
         if (characterToInsert != null && characterToInsert.size() > 0) {
             db.characterDao().insertAll(characterToInsert);
+            db.urlDao().insertAll(urlsToInsert);
         }
 
         if (characterToUpdate != null && characterToUpdate.size() > 0) {
             db.characterDao().updateAll(characterToUpdate);
+            db.urlDao().updateAll(urlsToUpdate);
         }
     }
 
