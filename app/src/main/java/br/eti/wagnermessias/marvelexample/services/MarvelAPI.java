@@ -5,6 +5,7 @@ import java.util.Map;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 /**
@@ -27,6 +28,9 @@ interface MarvelAPI {
 
     @GET("/v1/public/stories")
     Call<ResponseAPI> getStories(@QueryMap Map<String, String> options);
+
+    @GET("/v1/public/comics/{comicId}/creators")
+    Call<ResponseAPI> getCreatorsComicId(@Path("comicId") int comicId, @QueryMap Map<String, String> options);
    // Call<ResponseAPI> getCharacters(@Query("q") String q, @Query("sort") String sort, @Query("page") int page);
 
 //    @GET("/repos/{creator}/{repository}/pulls")
