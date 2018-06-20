@@ -28,11 +28,13 @@ public class ComicsService implements ComicsServiceContract{
     private MarvelAPI serviceMarvel;
     private int countOffset = 0;
     private final int LIMIT = 20;
+    private CreatorsService serviceCreator;
 
     public ComicsService(ComicsContract.Presenter presenter) {
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
         db = AppDatabase.getAppDatabase(presenter.getContextoView());
+        serviceCreator = new CreatorsService();
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ComicsService implements ComicsServiceContract{
                     if (comicsAPI != null && comicsAPI.size() > 0) {
                         insertOrUpdate(comicsAPI);
                         presenter.addData(comicsAPI,"API");
+
                     }
                 }
             }
@@ -113,6 +116,11 @@ public class ComicsService implements ComicsServiceContract{
         if(comicsToUpdate != null && comicsToUpdate.size() > 0){
             db.comicDao().updateAll(comicsToUpdate);
         }
+
+        for (Comic comic : comics){
+            serviceCreator.getCreatorsComicIdAPI(comic.getId());
+        }
+
     }
 
 }

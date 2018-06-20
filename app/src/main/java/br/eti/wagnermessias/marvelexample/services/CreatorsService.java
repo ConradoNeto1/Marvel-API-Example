@@ -35,9 +35,13 @@ public class CreatorsService implements CreatorsServiceContract{
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
         db = AppDatabase.getAppDatabase(presenter.getContextoView());
     }
+    public CreatorsService() {
+        serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
+        db = AppDatabase.getAppDatabase(presenter.getContextoView());
+    }
 
     @Override
-    public void getCreatorsComicIdAPI(int comicId) {
+    public void getCreatorsComicIdAPI(final int comicId) {
 
         Map<String, String> queryMap = new HashMap<String, String>();
         queryMap.putAll(getAuthorizationQueryMap());
@@ -53,9 +57,15 @@ public class CreatorsService implements CreatorsServiceContract{
                     List<Creator> CreatorsAPI = converterResults(resposta.getResults());
                     if (CreatorsAPI != null && CreatorsAPI.size() > 0) {
                         db.creatorDao().insertAll(CreatorsAPI);
+
+                        creatorRelationship(CreatorsAPI, comicId);
 //                        presenter.addData(CreatorsAPI,"API");
                     }
                 }
+            }
+
+            private void creatorRelationship(List<Creator> creatorsAPI, int comicId) {
+
             }
 
             @Override
