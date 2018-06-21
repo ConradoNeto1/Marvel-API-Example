@@ -25,7 +25,7 @@ public class Creator{
 	private String fullName;
 
 	@SerializedName("modified")
-	private Date modified;
+	private String modified;
 
 	@SerializedName("middleName")
 	private String middleName;
@@ -73,11 +73,11 @@ public class Creator{
 		this.fullName = fullName;
 	}
 
-	public Date getModified() {
+	public String getModified() {
 		return modified;
 	}
 
-	public void setModified(Date modified) {
+	public void setModified(String modified) {
 		this.modified = modified;
 	}
 

@@ -6,4 +6,6 @@ public interface ComicsServiceContract {
     void getComicsAPI(int countOffset);
     void getComicsDB();
     void deleteComic(Comic comic);
+
+    void loadCreatorsAPI(int idComics);
 }

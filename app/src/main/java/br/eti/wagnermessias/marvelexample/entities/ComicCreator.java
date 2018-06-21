@@ -2,6 +2,7 @@ package br.eti.wagnermessias.marvelexample.entities;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.support.annotation.NonNull;
 
 @Entity(tableName = "comic_creator",
         primaryKeys = { "comicId", "creatorId" },
@@ -15,8 +16,15 @@ import android.arch.persistence.room.ForeignKey;
         })
 public class ComicCreator {
 
+    @NonNull
     public Integer comicId;
+    @NonNull
     public Integer creatorId;
+
+    public ComicCreator(Integer comicId, Integer creatorId) {
+        this.comicId = comicId;
+        this.creatorId = creatorId;
+    }
 
     public Integer getComicId() {
         return comicId;

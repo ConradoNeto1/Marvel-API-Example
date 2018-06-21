@@ -1,5 +1,7 @@
 package br.eti.wagnermessias.marvelexample.services;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,35 +11,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.eti.wagnermessias.marvelexample.comics.ComicsContract;
 import br.eti.wagnermessias.marvelexample.entities.AppDatabase;
+import br.eti.wagnermessias.marvelexample.entities.ComicCreator;
 import br.eti.wagnermessias.marvelexample.entities.Creator;
 import br.eti.wagnermessias.marvelexample.entities.Data;
 import br.eti.wagnermessias.marvelexample.entities.ResponseAPI;
-import br.eti.wagnermessias.marvelexample.entities.Story;
-import br.eti.wagnermessias.marvelexample.Creators.CreatorsContract;
+import br.eti.wagnermessias.marvelexample.creators.CreatorsContract;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static br.eti.wagnermessias.marvelexample.helpers.RequestHelper.getAuthorizationQueryMap;
-import static br.eti.wagnermessias.marvelexample.helpers.RequestHelper.getLimitOffsetMap;
 
 public class CreatorsService implements CreatorsServiceContract{
 
     private AppDatabase db;
     public CreatorsContract.Presenter presenter;
+    public ComicsContract.Presenter presenterComics;
     private MarvelAPI serviceMarvel;
-    private int countOffset = 0;
-    private final int LIMIT = 20;
+    private Context context;
 
     public CreatorsService(CreatorsContract.Presenter presenter) {
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
         db = AppDatabase.getAppDatabase(presenter.getContextoView());
     }
-    public CreatorsService() {
+
+    public CreatorsService(Context context, ComicsContract.Presenter presenter) {
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
-        db = AppDatabase.getAppDatabase(presenter.getContextoView());
+        db = AppDatabase.getAppDatabase(context);
+        this.context = context;
+        presenterComics = presenter;
     }
 
     @Override
@@ -59,35 +64,42 @@ public class CreatorsService implements CreatorsServiceContract{
                         db.creatorDao().insertAll(CreatorsAPI);
 
                         creatorRelationship(CreatorsAPI, comicId);
-//                        presenter.addData(CreatorsAPI,"API");
+//                      presenter.addData(CreatorsAPI,"API");
                     }
                 }
             }
 
             private void creatorRelationship(List<Creator> creatorsAPI, int comicId) {
 
+                for(Creator creator : creatorsAPI){
+
+                    ComicCreator comicCreator = new ComicCreator(comicId,  creator.getId());
+                    db.comicCreatorDao().insert(comicCreator);
+
+                }
+
+                if(creatorsAPI.size() > 0) {
+                    presenterComics.showCreators(comicId);
+                }else{
+                    presenterComics.notifyErro("Não foi encontrado creators!");
+                }
+
             }
 
             @Override
             public void onFailure(Call<ResponseAPI> call, Throwable t) {
-//                presenter.notifyErro("Servidor indisponível no momento!");
+                presenterComics.notifyErro("Servidor indisponível no momento!");
             }
         });
     }
 
     @Override
     public void getCreatorsDB(int idComic) {
-        List<Creator> creatorsDB = db.creatorDao().getAll();
+        List<Creator> creatorsDB = db.comicCreatorDao().getCreatorsForComic(idComic);
         if (creatorsDB != null && creatorsDB.size() > 0) {
-            // presenter.addData(creatorsDB);
+            presenter.addData(creatorsDB);
         }
     }
-
-//    @Override
-//    public void deleteStory(Story story) {
-//        db.storyDao().delete(story);
-//        presenter.removeItemDisplay(story);
-//    }
 
     private List<Creator> converterResults(List<?> result) {
         Gson gson = new Gson();

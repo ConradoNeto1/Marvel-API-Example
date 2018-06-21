@@ -34,7 +34,7 @@ public class ComicsService implements ComicsServiceContract{
         this.presenter = presenter;
         serviceMarvel = RetrofitClientMarvel.getInstance().getServiceMarvelAPI();
         db = AppDatabase.getAppDatabase(presenter.getContextoView());
-        serviceCreator = new CreatorsService();
+        serviceCreator = new CreatorsService(presenter.getContextoView(),presenter);
     }
 
     @Override
@@ -117,10 +117,10 @@ public class ComicsService implements ComicsServiceContract{
             db.comicDao().updateAll(comicsToUpdate);
         }
 
-        for (Comic comic : comics){
-            serviceCreator.getCreatorsComicIdAPI(comic.getId());
-        }
-
     }
 
+    @Override
+    public void loadCreatorsAPI(int idComics) {
+        serviceCreator.getCreatorsComicIdAPI(idComics);
+    }
 }

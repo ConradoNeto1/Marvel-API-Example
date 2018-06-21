@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.entities.Comic;
+import br.eti.wagnermessias.marvelexample.entities.Creator;
 import br.eti.wagnermessias.marvelexample.helpers.NetworkHelper;
 import br.eti.wagnermessias.marvelexample.services.ComicsService;
 
@@ -33,6 +34,13 @@ public class ComicsPresenter implements ComicsContract.Presenter {
     }
 
     @Override
+    public void loadCreators(int idComics) {
+        if (NetworkHelper.verificaConexao(viewComics.getContexto())) {
+            service.loadCreatorsAPI(idComics);
+        }
+    }
+
+    @Override
     public void addData(List<Comic> comicsNews, String origin) {
         List<Comic> comicsOld = viewComics.getComics();
         if(!origin.equals("DB")) {
@@ -53,6 +61,11 @@ public class ComicsPresenter implements ComicsContract.Presenter {
                 viewComics.updateRecyclerView(comicsNews);
             }
         }
+    }
+
+    @Override
+    public void showCreators(int idComic) {
+        viewComics.openActivityCreatores(idComic);
     }
 
     @Override

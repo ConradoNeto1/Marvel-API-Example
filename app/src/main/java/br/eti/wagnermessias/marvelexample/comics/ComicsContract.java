@@ -6,6 +6,7 @@ import java.util.List;
 
 import br.eti.wagnermessias.marvelexample.base.BaseView;
 import br.eti.wagnermessias.marvelexample.entities.Comic;
+import br.eti.wagnermessias.marvelexample.entities.Creator;
 
 public interface ComicsContract {
     interface View extends BaseView<Presenter> {
@@ -18,12 +19,19 @@ public interface ComicsContract {
         void showErroDisplay(String msgErro);
         int  getCountOffset();
         void setCountOffset(int countOffset);
+
+        void openActivityCreatores(int idComic);
     }
 
     interface Presenter{
         void loadComics(int countOffset);
 
+        void loadCreators(int idComics);
+
         void addData(List<Comic> comics, String origin);
+
+        void showCreators(int idComic);
+
         void deleteItem(Comic comic);
         void removeItemDisplay(Comic comic);
 
